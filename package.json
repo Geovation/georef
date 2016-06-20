@@ -1,0 +1,8 @@
+{
+    "name": "georef",
+    "private": true,
+    "dependencies": {
+        "express": "^4.14.0",
+        "multer": "^1.1.0"
+    }
+}
