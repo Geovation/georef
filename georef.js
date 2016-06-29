@@ -2,9 +2,10 @@
 //
 // curl -v \
 //      -F 'image=@test.tiff' \
-//      -F 'points=[{ "tileX": 83, "tileY": 754, "geoX": -0.11243820190429688, "geoY": 51.52178189877856 },{ "tileX": 262, "tileY": 261, "geoX": -0.11057138442993164, "geoY": 51.525052857123434 },{ "tileX": 594, "tileY": 685, "geoX": -0.10698795318603516, "geoY": 51.522182436913845 }]' \
+//      -F 'points=[{ "imgX": 83, "imgY": 754, "geoX": -0.11243820190429688, "geoY": 51.52178189877856 },{ "imgX": 262, "imgY": 261, "geoX": -0.11057138442993164, "geoY": 51.525052857123434 },{ "imgX": 594, "imgY": 685, "geoX": -0.10698795318603516, "geoY": 51.522182436913845 }]' \
 // localhost:3000/georeference
 
+const FS = require('fs')
 const ChildProcess = require('child_process')
 const Express = require('express')
 const Multer = require('multer')
@@ -18,7 +19,8 @@ app.post('/georeference', upload.single('image'), function (request, response) {
         if (points.length < 3) throw new Error('not enough points')
         georeference(request.file.path, points, (e, filepath) => {
             if (e) throw e
-            else response.download(filepath, request.file.originalname.replace('.tiff', '-georef.tiff'))
+            const filedata = new Buffer(FS.readFileSync(filepath)).toString('base64')
+            response.status(200).send(filedata)
         })
     }
     catch (e) {
@@ -26,10 +28,10 @@ app.post('/georeference', upload.single('image'), function (request, response) {
     }
 })
 
-app.listen(3000)
+app.listen(3030)
 
 function georeference(filepath, points, callback) {
-    const control = points.map(point => `-gcp ${point.tileX} ${point.tileY} ${point.geoX} ${point.geoY}`).join(' ')
+    const control = points.map(point => `-gcp ${point.imgX} ${point.imgY} ${point.geoX} ${point.geoY}`).join(' ')
     const translateCommand = `gdal_translate -of GTiff -a_srs EPSG:4326 ${control} ${filepath} ${filepath}-geo`
     ChildProcess.exec(translateCommand, e => {
         if (e) callback(e)
