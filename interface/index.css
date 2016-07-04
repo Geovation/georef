@@ -1,0 +1,182 @@
+body {
+    background: #1c1c1c;
+    margin: 0;
+    color: #333;
+    font: 16px 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif;
+}
+
+h2 {
+    margin: 0 0 20px 0;
+    color: white;
+    font-size: 29px;
+    font-weight: normal;
+    letter-spacing: 1px;
+}
+
+input {
+    display: block;
+    width: calc(100% - 16px);
+    background: #ddd;
+    margin: 0;
+    border: none;
+    border-radius: 3px;
+    padding: 8px;
+    font: inherit;
+    transition: background-color 300ms ease-out;
+}
+
+input:hover,
+input:focus {
+    background: white;
+    outline: none;
+}
+
+button {
+    display: block;
+    background: #e7e7e7;
+    margin: 16px 0 0 0;
+    border: none;
+    border-radius: 6px;
+    padding: 16px 32px 17px 32px;
+    color: inherit;
+    font-size: 16px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background-color 300ms ease-out;
+}
+
+button:hover {
+    background: #b9b9b9;
+}
+
+button:disabled {
+    background: #555;
+    color: #999;
+}
+
+.new-map {
+    max-width: 600px;
+    background: #333;
+    box-shadow: 0 0 32px black;
+    border-radius: 10px;
+    padding: 20px;
+    margin: 5% auto;
+}
+
+.new-map ol {
+    margin: 16px 0 0 0;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    padding: 0;
+    list-style-type: none;
+    color: #eee;
+}
+
+.new-map ol li {
+    padding: 2px 6px;
+    cursor: pointer;
+}
+
+.new-map ol li:nth-child(odd) {
+    background: rgba(128, 128, 128, 0.1);
+}
+
+.new-map ol li:hover {
+    background: rgba(128, 128, 128, 0.2);
+}
+
+.new-map .dropzone {
+    background: #ddd;
+    border-radius: 3px;
+    margin: 16px 0;
+    padding: 50px 0;
+    text-align: center;
+}
+
+.new-map .dropzone.dragging {
+    background: white;
+}
+
+.new-map .dropzone p {
+    display: inline;
+}
+
+.new-map .dropzone button {
+    display: inline;
+    background: #b9b9b9;
+    margin: 0;
+    padding: 8px;
+    text-transform: lowercase;
+}
+
+.new-map .dropzone [type=file] {
+    display: none;
+}
+
+.new-map .error {
+    display: block;
+    color: #e74c3c;
+}
+
+.view-map .loading {
+    display: block;
+    margin-top: 10%;
+    color: #e7e7e7;
+    text-align: center;
+    font-weight: bold;
+}
+
+.view-map .top {
+    width: 100%;
+    background: #333;
+    padding: 16px 0;
+    text-align: right;
+}
+.view-map .error {
+    background: #e74c3c;
+    padding: 5px 10px;
+}
+
+.view-map .top button {
+    display: inline-block;
+    margin: 0 16px 0 0;
+}
+
+.view-map .map {
+    display: inline-block;
+    width: calc(50% - 1px);
+    height: calc(100vh - 83px);
+}
+
+.view-map .map .marker {
+    background: black;
+    border-radius: 50%;
+}
+
+.view-map .map .marker.number-1  { background: red;     }
+.view-map .map .marker.number-2  { background: green;   }
+.view-map .map .marker.number-3  { background: blue;    }
+.view-map .map .marker.number-4  { background: purple;  }
+.view-map .map .marker.number-5  { background: yellow;  }
+.view-map .map .marker.number-6  { background: teal;    }
+.view-map .map .marker.number-7  { background: olive;   }
+.view-map .map .marker.number-8  { background: maroon;  }
+.view-map .map .marker.number-9  { background: navy;    }
+.view-map .map .marker.number-10 { background: fuchsia; }
+
+.view-map .map.img {
+    margin-right: 1px;
+}
+
+.view-map .map.geo {
+    margin-left: 1px;
+}
+
+.get-map {
+    max-width: 600px;
+    background: #333;
+    box-shadow: 0 0 32px black;
+    border-radius: 10px;
+    padding: 20px;
+    margin: 5% auto;
+}

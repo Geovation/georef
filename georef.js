@@ -28,6 +28,8 @@ app.post('/georeference', upload.single('image'), function (request, response) {
     }
 })
 
+app.use(Express.static('interface'))
+
 app.listen(3030)
 
 function georeference(filepath, points, callback) {
