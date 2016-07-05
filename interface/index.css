@@ -134,6 +134,7 @@ button:disabled {
 }
 .view-map .error {
     background: #e74c3c;
+    margin-right: 16px;
     padding: 5px 10px;
 }
 
