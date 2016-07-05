@@ -149,6 +149,14 @@ button:disabled {
     height: calc(100vh - 83px);
 }
 
+.view-map .map .leaflet {
+    height: 100%;
+}
+
+.view-map .map.adding .leaflet {
+    cursor: crosshair;
+}
+
 .view-map .map .marker {
     background: black;
     border-radius: 50%;

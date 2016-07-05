@@ -1,7 +1,7 @@
 var Map = React.createClass({
 
     componentDidMount: function () {
-        var node = ReactDOM.findDOMNode(this)
+        var node = ReactDOM.findDOMNode(this).children[0]
         if (this.props.imageSource) {
             var bounds = [[0, this.props.imageW], [this.props.imageH, 0]]
             var mapConfig = {
@@ -48,7 +48,8 @@ var Map = React.createClass({
     },
 
     render: function () {
-        return React.DOM.div({ className: this.props.className })
+        var isAdding =  (this.props.isAdding() ? ' adding' : '')
+        return React.DOM.div({ className: this.props.className + isAdding }, React.DOM.div({ className: 'leaflet' }))
     }
 
 })
