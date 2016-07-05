@@ -1,12 +1,14 @@
 var GetMap = React.createClass({
 
     download: function () {
+        var data = window.atob(this.props.result).split('').map(function (byte) {
+            return byte.charCodeAt()
+        })
+        var blob = new Blob([new Uint8Array(data)], { type: 'image/tiff' })
         var anchor = document.createElement('a')
-        anchor.setAttribute('href', this.props.result)
+        anchor.setAttribute('href', URL.createObjectURL(blob))
         anchor.setAttribute('download', 'georefed.tiff')
-        document.body.appendChild(anchor)
         anchor.click()
-        document.body.removeChild(anchor)
     },
 
     render: function () {

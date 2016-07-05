@@ -47,7 +47,7 @@ var ViewMap = React.createClass({
         http.addEventListener('load', function () {
             this.setState({ loading: false })
             if (http.status >= 400) this.setState({ error: http.responseText })
-            else this.props.setOutput('data:image/tiff;base64,' + http.response)
+            else this.props.setOutput(http.response)
         }.bind(this))
         http.send(data)
     },
