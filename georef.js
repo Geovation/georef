@@ -28,7 +28,7 @@ function georeference(filepath, points, callback) {
         ChildProcess.exec(warpCommand, e => {
             if (e) callback(e)
             const filename = filepath + '-geo-warped'
-            const filedata = new Buffer(FS.readFileSync(filepath)).toString('base64')
+            const filedata = new Buffer(FS.readFileSync(filename)).toString('base64')
             callback(null, filedata)
         })
     })
