@@ -3,6 +3,8 @@ Georef
 
 A user-friendly webapp for converting normal images into GeoTiffs.
 
+![Demo](https://cloud.githubusercontent.com/assets/896707/16615442/a7dac64a-436e-11e6-80bf-6d9bd5fc8c3c.gif)
+
 
 Deploying
 ---------
