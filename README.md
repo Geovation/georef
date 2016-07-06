@@ -15,7 +15,7 @@ If you are deploying locally and you are not running Linux you will need to crea
 
     $ docker-machine create -d virtualbox georef
     $ eval "$(docker-machine env georef)"
-    $ VBoxManage controlvm georef natpf1 'georef,tcp,,4000,,4000'
+    $ VBoxManage controlvm georef natpf1 'georef,tcp,,3030,,3030'
 
 Alternately, if you are deploying to AWS, you will need to create an EC2 machine instead:
 
