@@ -13,7 +13,7 @@ var GetMap = React.createClass({
 
     render: function () {
         var title = React.DOM.h2({}, 'Georeferencing complete!')
-        var downloadButton = React.DOM.button({ onClick: this.download }, 'Download')
+        var downloadButton = this.props.resultUploaded ? '' : React.DOM.button({ onClick: this.download }, 'Download')
         return React.DOM.div({ className: 'get-map' }, title, downloadButton)
     }
 

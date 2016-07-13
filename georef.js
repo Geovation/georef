@@ -2,6 +2,8 @@ const FS = require('fs')
 const ChildProcess = require('child_process')
 const Express = require('express')
 const Multer = require('multer')
+const Request = require('request')
+const FormData = require('form-data')
 
 const app = Express()
 const upload = Multer({ dest: 'data/' })
@@ -11,7 +13,13 @@ app.post('/georeference', upload.single('image'), (request, response) => {
     if (points.length < 3) response.status(400).send('not enough points')
     georeference(request.file.path, points, (e, data) => {
         if (e) response.status(500).send(e.message)
-        response.status(200).send(data)
+        if (!request.body.to) response.status(200).send(data)
+        else {
+            send(request.body.to, data, e => {
+                if (e) response.status(500).send(e.message)
+                else response.status(200).send(data)
+            })
+        }
     })
 })
 
@@ -45,5 +53,14 @@ function tidy() {
                 if (minutesAgoCreated > 60) FS.unlink('data/' + filename)
             })
         })
+    })
+}
+
+function send(url, data, callback) {
+    const form = new FormData()
+    form.append('image', data)
+    Request.post({ url, form }, (e, response) => {
+        if (e) callback(e)
+        else callback(null, response)
     })
 }

@@ -39,15 +39,18 @@ var ViewMap = React.createClass({
         }.bind(this))
         if (points.length < 3) return this.setState({ error: 'You must select at least 3 points' })
         this.setState({ loading: true })
+        const querystring = document.location.href.split('?')[1]
+        const query = querystring ? Qs.parse(querystring) : {}
         var http = new XMLHttpRequest()
         http.open('POST', '/georeference', true)
         var data = new FormData()
         data.append('image', this.props.image)
         data.append('points', JSON.stringify(points))
+        if (query.to) data.append('to', query.to)
         http.addEventListener('load', function () {
             this.setState({ loading: false })
             if (http.status >= 400) this.setState({ error: http.responseText })
-            else this.props.setOutput(http.response)
+            else this.props.setOutput(http.response, query.to ? true : false)
         }.bind(this))
         http.send(data)
     },
