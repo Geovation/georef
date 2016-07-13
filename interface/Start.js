@@ -5,7 +5,7 @@ var Georef = React.createClass({
     },
 
     setOutput: function (result, resultUploaded) {
-        this.setState({ result: result, resultUploaded })
+        this.setState({ result: result, resultUploaded: resultUploaded })
     },
 
     render: function () {
