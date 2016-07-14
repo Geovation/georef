@@ -27,9 +27,21 @@ Alternately, if you are deploying to AWS, you will need to create an EC2 machine
 
 (You will also need to expose port 3030 via the AWS Console.)
 
+Create a configuration file, by copying `config.example.json` to `config.json`. Both `uploadLocation` and `nextLocation` are optional, though the configuration file must be present for the build to succeed.
+
 Next, build and run the Dockerfile:
 
     $ docker build -t georef .
     $ docker run --name georef -dp 3030:3030 georef
 
 Georef should now be available on port 3030 of your machine.
+
+
+Integration
+-----------
+
+Georef was built to be integrated as part of another application -- though it can be used on its own too. Integrate it with the rest of your application by using the following configuration options:
+
+`uploadLocation`: a Url. If present and Georef is called with an `id` parameter the resulting image data gets uploaded here as a HTTP POST, with the `id` parameter concatenated onto the end. If both this configuration option is set and a an `id` is present the download button at the end is not shown.
+
+`nextLocation`: a Url. If present and the resulting image is to be uploaded, the user is redirected here after georeferencing. If present but the image is not to be uploaded a 'Next' button is shown on the download screen to take the user there.
