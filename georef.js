@@ -4,22 +4,23 @@ const Express = require('express')
 const Multer = require('multer')
 const Request = require('request')
 const FormData = require('form-data')
+const Config = require('./config.json')
 
 const app = Express()
-const upload = Multer({ dest: 'data/' })
+const recieve = Multer({ dest: 'data/' })
 
-app.post('/georeference', upload.single('image'), (request, response) => {
+app.post('/georeference', recieve.single('image'), (request, response) => {
     const points = JSON.parse(request.body.points)
     if (points.length < 3) response.status(400).send('not enough points')
-    georeference(request.file.path, points, (e, data) => {
+    georeference(request.file.path, points, (e, result) => {
         if (e) response.status(500).send(e.message)
-        if (!request.body.to) response.status(200).send(data)
-        else {
-            send(request.body.to, data, e => {
+        else if (request.body.id && Config.uploadLocation) {
+            upload(request.body.id, result, e => {
                 if (e) response.status(500).send(e.message)
-                else response.status(200).send(data)
+                else response.status(200).send({ result, resultUploaded: true, nextLocation: Config.nextLocation })
             })
         }
+        else response.status(200).send({ result, resultUploaded: false, nextLocation: Config.nextLocation })
     })
 })
 
@@ -56,7 +57,8 @@ function tidy() {
     })
 }
 
-function send(url, data, callback) {
+function upload(id, data, callback) {
+    const url = Config.uploadLocation + id
     const form = new FormData()
     form.append('image', data)
     Request.post({ url, form }, (e, response) => {

@@ -46,11 +46,14 @@ var ViewMap = React.createClass({
         var data = new FormData()
         data.append('image', this.props.image)
         data.append('points', JSON.stringify(points))
-        if (query.to) data.append('to', query.to)
+        if (query.id) data.append('id', query.id)
         http.addEventListener('load', function () {
             this.setState({ loading: false })
             if (http.status >= 400) this.setState({ error: http.responseText })
-            else this.props.setOutput(http.response, query.to ? true : false)
+            else {
+                const response = JSON.parse(http.response)
+                this.props.setOutput(response.result, response.resultUploaded, response.nextLocation)
+            }
         }.bind(this))
         http.send(data)
     },

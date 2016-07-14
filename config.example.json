@@ -1,0 +1,4 @@
+{
+    "uploadLocation": "http://api.example.com/images/",
+    "nextLocation": "http://example.com/"
+}

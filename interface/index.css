@@ -32,9 +32,9 @@ input:focus {
 }
 
 button {
-    display: block;
+    display: inline-block;
     background: #e7e7e7;
-    margin: 16px 0 0 0;
+    margin: 16px 16px 0 0;
     border: none;
     border-radius: 6px;
     padding: 16px 32px 17px 32px;
