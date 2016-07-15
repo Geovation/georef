@@ -6,7 +6,7 @@ body {
 }
 
 h2 {
-    margin: 0 0 20px 0;
+    margin: 0;
     color: white;
     font-size: 29px;
     font-weight: normal;
@@ -32,9 +32,9 @@ input:focus {
 }
 
 button {
-    display: block;
+    display: inline-block;
     background: #e7e7e7;
-    margin: 16px 0 0 0;
+    margin: 16px 16px 0 0;
     border: none;
     border-radius: 6px;
     padding: 16px 32px 17px 32px;
@@ -61,6 +61,10 @@ button:disabled {
     border-radius: 10px;
     padding: 20px;
     margin: 5% auto;
+}
+
+.new-map .location {
+    margin-top: 20px;
 }
 
 .new-map ol {

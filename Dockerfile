@@ -6,6 +6,7 @@ RUN apk add --no-cache gdal nodejs
 COPY interface/*  /georef/interface/
 COPY georef.js    /georef/
 COPY package.json /georef/
+COPY config.json  /georef/
 
 RUN cd georef && npm install
 

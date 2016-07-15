@@ -11,10 +11,16 @@ var GetMap = React.createClass({
         anchor.click()
     },
 
+    next: function () {
+        window.location = this.props.nextLocation
+    },
+
     render: function () {
+        if (this.props.nextLocation && this.props.resultUploaded) this.next()
         var title = React.DOM.h2({}, 'Georeferencing complete!')
-        var downloadButton = React.DOM.button({ onClick: this.download }, 'Download')
-        return React.DOM.div({ className: 'get-map' }, title, downloadButton)
+        var downloadButton = this.props.resultUploaded ? '' : React.DOM.button({ onClick: this.download }, 'Download')
+        var nextButton = this.props.nextLocation && !this.props.resultUploaded ? React.DOM.button({ onClick: this.next }, 'Next') : ''
+        return React.DOM.div({ className: 'get-map' }, title, downloadButton, nextButton)
     }
 
 })
