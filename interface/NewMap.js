@@ -53,7 +53,9 @@ var NewMap = React.createClass({
     start: function () {
         var checks = {
             location: this.state.locationCoords ? false : 'You must enter a rough location for this map.',
-            image: this.state.image ? false : 'You must select an image file to be used.'
+            image: this.state.image ? false : 'You must select an image file to be used.',
+            imageSize: this.state.image.size < 25000000 ? false : 'Image is too large.',
+            imageType: this.state.image.type.startsWith('image/') ? false : 'The file must be an image.'
         }
         var errors = Object.keys(checks).map(function (k) { return checks[k] }).filter(function (v) { return v })
         if (errors.length === 0) this.props.setInput(this.state.locationCoords, this.state.image)

@@ -7,7 +7,11 @@ const FormData = require('form-data')
 const Config = require('./config.json')
 
 const app = Express()
-const recieve = Multer({ dest: 'data/' })
+const recieve = Multer({
+    dest: 'data/',
+    fileFilter: (_, file, callback) => callback(null, file.mimetype.startsWith('image/')),
+    limits: { fileSize: 25000000 }
+})
 
 app.post('/georeference', recieve.single('image'), (request, response) => {
     const points = JSON.parse(request.body.points)
