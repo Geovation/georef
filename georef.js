@@ -1,3 +1,4 @@
+const Path = require('path')
 const FS = require('fs')
 const ChildProcess = require('child_process')
 const Express = require('express')
@@ -29,6 +30,10 @@ app.post('/georeference', recieve.single('image'), (request, response) => {
 })
 
 app.use(Express.static('interface'))
+
+app.use((request, response) => {
+    response.status(404).sendFile(Path.join(__dirname, 'interface/404.html'))
+})
 
 app.listen(3030)
 
