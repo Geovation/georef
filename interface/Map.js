@@ -56,8 +56,8 @@ var Map = React.createClass({
             oldLayers.forEach(function (layer) {
                 this.state.map.removeLayer(layer)
             }.bind(this))
+            this.props.points.forEach(this.addPoint)
         }
-        this.props.points.forEach(this.addPoint)
         return React.DOM.div({ className: this.props.className + isAdding }, React.DOM.div({ className: 'leaflet' }))
     }
 
