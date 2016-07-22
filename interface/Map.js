@@ -36,19 +36,28 @@ var Map = React.createClass({
     },
 
     clicked: function (event) {
-        if (!this.props.isAdding()) return
+        if (this.props.isAdding() === false) return
+        this.props.addPoint(event.latlng)
+    },
+
+    addPoint: function (point) {
         var iconNumber = 'number-' + Object.keys(this.state.map._layers).length
         var icon = L.divIcon({ className: 'marker ' + iconNumber })
-        this.state.map.addLayer(L.marker(event.latlng, { icon: icon }))
-        var coordinates = !this.props.imageSource ? event.latlng : {
-            lng: event.latlng.lng,
-            lat: this.props.imageH - event.latlng.lat
-        }
-        this.props.addPoint(coordinates)
+        this.state.map.addLayer(L.marker(point, { icon: icon }))
     },
 
     render: function () {
-        var isAdding =  (this.props.isAdding() ? ' adding' : '')
+        var isAdding = this.props.isAdding() ? ' adding' : ''
+        var oldLayers = []
+        if (this.state && this.state.map) {
+            this.state.map.eachLayer(function (layer) {
+                if (layer.options.icon) oldLayers = oldLayers.concat(layer)
+            })
+            oldLayers.forEach(function (layer) {
+                this.state.map.removeLayer(layer)
+            }.bind(this))
+        }
+        this.props.points.forEach(this.addPoint)
         return React.DOM.div({ className: this.props.className + isAdding }, React.DOM.div({ className: 'leaflet' }))
     }
 

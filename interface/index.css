@@ -135,11 +135,11 @@ button:disabled {
 }
 
 .view-map .top {
-    width: 100%;
     background: #333;
     padding: 16px 0;
     text-align: right;
 }
+
 .view-map .error {
     background: #e74c3c;
     margin-right: 16px;
@@ -154,7 +154,8 @@ button:disabled {
 .view-map .map {
     display: inline-block;
     width: calc(50% - 1px);
-    height: calc(100vh - 83px);
+    height: calc(100vh - 135px);
+    margin-bottom: -3px;
 }
 
 .view-map .map .leaflet {
@@ -168,18 +169,19 @@ button:disabled {
 .view-map .map .marker {
     background: black;
     border-radius: 50%;
+    cursor: inherit;
 }
 
-.view-map .map .marker.number-1  { background: red;     }
-.view-map .map .marker.number-2  { background: green;   }
-.view-map .map .marker.number-3  { background: blue;    }
-.view-map .map .marker.number-4  { background: purple;  }
-.view-map .map .marker.number-5  { background: yellow;  }
-.view-map .map .marker.number-6  { background: teal;    }
-.view-map .map .marker.number-7  { background: olive;   }
-.view-map .map .marker.number-8  { background: maroon;  }
-.view-map .map .marker.number-9  { background: navy;    }
-.view-map .map .marker.number-10 { background: fuchsia; }
+.view-map .map .marker.number-1,  .view-map .bottom li.number-1  { background: red;     }
+.view-map .map .marker.number-2,  .view-map .bottom li.number-2  { background: green;   }
+.view-map .map .marker.number-3,  .view-map .bottom li.number-3  { background: blue;    }
+.view-map .map .marker.number-4,  .view-map .bottom li.number-4  { background: purple;  }
+.view-map .map .marker.number-5,  .view-map .bottom li.number-5  { background: yellow;  }
+.view-map .map .marker.number-6,  .view-map .bottom li.number-6  { background: teal;    }
+.view-map .map .marker.number-7,  .view-map .bottom li.number-7  { background: olive;   }
+.view-map .map .marker.number-8,  .view-map .bottom li.number-8  { background: maroon;  }
+.view-map .map .marker.number-9,  .view-map .bottom li.number-9  { background: navy;    }
+.view-map .map .marker.number-10, .view-map .bottom li.number-10 { background: fuchsia; }
 
 .view-map .map.img {
     margin-right: 1px;
@@ -187,6 +189,51 @@ button:disabled {
 
 .view-map .map.geo {
     margin-left: 1px;
+}
+
+.view-map .bottom {
+    min-height: 52px;
+    overflow-x: scroll;
+    white-space: nowrap;
+    background: #333;
+    margin: 0;
+    padding: 0;
+}
+
+.view-map .bottom li {
+    display: inline-block;
+    background: black;
+    margin: 5px 0 5px 5px;
+    border-radius: 6px;
+}
+
+.view-map .bottom li .number {
+    margin: 0 11px;
+    color: white;
+    font-size: 20px;
+}
+
+.view-map .bottom li .coords {
+    display: inline-block;
+    vertical-align: top;
+    margin-top: 7px;
+    color: white;
+    font: 12px monospace;
+}
+
+.view-map .bottom li .remove {
+    display: inline-block;
+    background: #e7e7e7;
+    margin-left: 11px;
+    border-radius: 0 6px 6px 0;
+    padding: 8px 11px 11px 10px;
+    font-size: 20px;
+    cursor: pointer;
+    transition: background-color 300ms ease-out;
+}
+
+.view-map .bottom li .remove:hover {
+    background: #b9b9b9;
 }
 
 .get-map {

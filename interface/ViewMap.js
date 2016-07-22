@@ -27,9 +27,11 @@ var ViewMap = React.createClass({
         reader.readAsDataURL(this.props.image)
     },
 
-    run: function () {
-        if (this.state.imgAdding || this.state.geoAdding) return this.setState({ error: 'Finish adding points first' })
-        var points = this.state.imgPoints.map(function (point, i) {
+    points: function() {
+        var length = this.state.imgPoints.length < this.state.geoPoints.length
+            ? this.state.imgPoints.length
+            : this.state.geoPoints.length
+        return this.state.imgPoints.slice(0, length).map(function (point, i) {
             return {
                 imgLng: point.lng,
                 imgLat: point.lat,
@@ -37,6 +39,11 @@ var ViewMap = React.createClass({
                 geoLat: this.state.geoPoints[i].lat
             }
         }.bind(this))
+    },
+
+    run: function () {
+        if (this.state.imgAdding || this.state.geoAdding) return this.setState({ error: 'Finish adding points first' })
+        var points = this.points()
         if (points.length < 3) return this.setState({ error: 'You must select at least 3 points' })
         this.setState({ loading: true })
         const querystring = document.location.href.split('?')[1]
@@ -62,6 +69,14 @@ var ViewMap = React.createClass({
         this.setState({ imgAdding: true, geoAdding: true })
     },
 
+    removePoint: function (number) {
+        return function () {
+            var geoPointsNew = this.state.geoPoints.filter(function (_, i) { return i !== number })
+            var imgPointsNew = this.state.imgPoints.filter(function (_, i) { return i !== number })
+            this.setState({ geoPoints: geoPointsNew, imgPoints: imgPointsNew })
+        }.bind(this)
+    },
+
     render: function () {
         if (this.state.loading) {
             var loading = React.DOM.span({ className: 'loading' }, 'Loading...')
@@ -73,12 +88,14 @@ var ViewMap = React.createClass({
                 imageSource: this.state.imageSource,
                 imageW: this.state.imageW,
                 imageH: this.state.imageH,
+                points: this.state.imgPoints,
                 isAdding: function () { return this.state.imgAdding }.bind(this),
                 addPoint: function (point) { this.setState({ imgPoints: this.state.imgPoints.concat(point), imgAdding: false }) }.bind(this)
             })
             var mapGeo = React.createElement(Map, {
                 className: 'geo map',
                 location: this.props.location,
+                points: this.state.geoPoints,
                 isAdding: function () { return this.state.geoAdding }.bind(this),
                 addPoint: function (point) { this.setState({ geoPoints: this.state.geoPoints.concat(point), geoAdding: false }) }.bind(this)
             })
@@ -87,7 +104,16 @@ var ViewMap = React.createClass({
             var addPointButton = React.DOM.button({ onClick: this.addPoint, disabled: isAdding }, 'Add point')
             var runButton = React.DOM.button({ onClick: this.run }, 'Run')
             var top = React.DOM.div({ className: 'top' }, error, addPointButton, runButton)
-            return React.DOM.div({ className: 'view-map' }, top, mapImg, mapGeo)
+            var points = this.points().map(function (point, i) {
+                var number = React.DOM.span({ className: 'number' }, '#' + (i + 1))
+                var coordsLat = 'Lat: ' + Math.round(point.geoLat * 10000) / 10000
+                var coordsLng = 'Lng: ' + Math.round(point.geoLng * 10000) / 10000
+                var coords = React.DOM.span({ className: 'coords' }, coordsLat, React.DOM.br(), coordsLng)
+                var remove = React.DOM.span({ className: 'remove', onClick: this.removePoint(i) }, '×')
+                return React.DOM.li({ className: 'number-' + (i + 1) }, number, coords, remove)
+            }.bind(this))
+            var bottom = React.DOM.ol({ className: 'bottom' }, points)
+            return React.DOM.div({ className: 'view-map' }, top, mapImg, mapGeo, bottom)
         }
     }
 
