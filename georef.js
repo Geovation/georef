@@ -37,17 +37,18 @@ app.use((request, response) => {
 
 app.listen(3030)
 
-function georeference(filepath, points, callback) {
-    const control = points.map(point => `-gcp ${point.imgLng} ${point.imgLat} ${point.geoLng} ${point.geoLat}`).join(' ')
-    const translateCommand = `gdal_translate -of GTiff -a_srs EPSG:4326 ${control} ${filepath} ${filepath}-geo`
+function georeference(filename, points, callback) {
+    const controls = points.map(point => `-gcp ${point.imgLng} ${point.imgLat} ${point.geoLng} ${point.geoLat}`).join(' ')
+    const translateName = filename + '-tran'
+    const translateCommand = `gdal_translate -of GTiff -a_srs EPSG:4326 ${controls} ${filename} ${translateName}`
     ChildProcess.exec(translateCommand, e => {
-        if (e) callback(e)
-        const warpCommand = `gdalwarp ${filepath}-geo ${filepath}-geo-warped` // -dstalpha
+        if (e) return callback(e)
+        const warpName = translateName + '-warp'
+        const warpCommand = `gdalwarp ${translateName} ${warpName}` // -dstalpha
         ChildProcess.exec(warpCommand, e => {
-            if (e) callback(e)
-            const filename = filepath + '-geo-warped'
-            const filedata = new Buffer(FS.readFileSync(filename)).toString('base64')
-            callback(null, filedata)
+            if (e) return callback(e)
+            const data = new Buffer(FS.readFileSync(warpName)).toString('base64')
+            callback(null, data)
         })
     })
     tidy()
