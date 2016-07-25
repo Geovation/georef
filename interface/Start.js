@@ -4,14 +4,15 @@ var Georef = React.createClass({
         this.setState({ location: location, image: image })
     },
 
-    setOutput: function (result, resultUploaded, nextLocation) {
-        this.setState({ result: result, resultUploaded: resultUploaded, nextLocation: nextLocation })
+    setOutput: function (result, format, resultUploaded, nextLocation) {
+        this.setState({ result: result, format: format, resultUploaded: resultUploaded, nextLocation: nextLocation })
     },
 
     render: function () {
         if (this.state && this.state.result) {
             return React.createElement(GetMap, {
                 result: this.state.result,
+                format: this.state.format,
                 resultUploaded: this.state.resultUploaded,
                 nextLocation: this.state.nextLocation
             })

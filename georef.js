@@ -19,15 +19,16 @@ const recieve = Multer({
 app.post('/georeference', recieve.single('image'), (request, response) => {
     const points = JSON.parse(request.body.points)
     if (points.length < 3) response.status(400).send('not enough points')
+    const format = Config.output === 'tiles' ? 'zip' : 'tiff'
     georeference(request.file.path, points, (e, result) => {
         if (e) response.status(500).send(e.message)
         else if (request.body.id && Config.uploadLocation) {
             upload(request.body.id, result, e => {
                 if (e) response.status(500).send(e.message)
-                else response.status(200).send({ result, resultUploaded: true, nextLocation: Config.nextLocation })
+                else response.status(200).send({ result, resultUploaded: true, format, nextLocation: Config.nextLocation })
             })
         }
-        else response.status(200).send({ result, resultUploaded: false, nextLocation: Config.nextLocation })
+        else response.status(200).send({ result, resultUploaded: false, format, nextLocation: Config.nextLocation })
     })
 })
 
