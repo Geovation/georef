@@ -19,7 +19,7 @@ const recieve = Multer({
 app.post('/georeference', recieve.single('image'), (request, response) => {
     const points = JSON.parse(request.body.points)
     if (points.length < 3) response.status(400).send('not enough points')
-    georeference(request.file.path, points, request.params.tile, (e, result) => {
+    georeference(request.file.path, points, (e, result) => {
         if (e) response.status(500).send(e.message)
         else if (request.body.id && Config.uploadLocation) {
             upload(request.body.id, result, e => {
@@ -39,7 +39,7 @@ app.use((request, response) => {
 
 app.listen(3030)
 
-function georeference(filename, points, toTiles, callback) {
+function georeference(filename, points, callback) {
     const controls = points.map(point => `-gcp ${point.imgLng} ${point.imgLat} ${point.geoLng} ${point.geoLat}`).join(' ')
     const translateName = filename + '-tran'
     const translateCommand = `gdal_translate -of GTiff -a_srs EPSG:4326 ${controls} ${filename} ${translateName}`
@@ -49,7 +49,7 @@ function georeference(filename, points, toTiles, callback) {
         const warpCommand = `gdalwarp ${translateName} ${warpName}` // -dstalpha
         ChildProcess.exec(warpCommand, e => {
             if (e) return callback(e)
-            if (toTiles) tile(warpName, callback)
+            if (Config.output === 'tiles') tile(warpName, callback)
             else {
                 const data = new Buffer(FS.readFileSync(warpName)).toString('base64')
                 callback(null, data)
