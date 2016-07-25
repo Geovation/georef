@@ -1,7 +1,7 @@
 FROM alpine:3.4
 
 RUN echo 'http://dl-4.alpinelinux.org/alpine/edge/testing' >> /etc/apk/repositories
-RUN apk add --no-cache gdal nodejs
+RUN apk add --no-cache gdal python nodejs
 
 COPY interface/*  /georef/interface/
 COPY georef.js    /georef/

@@ -5,6 +5,8 @@ const Express = require('express')
 const Multer = require('multer')
 const Request = require('request')
 const FormData = require('form-data')
+const ZipFolder = require('zip-folder')
+const Rimraf = require('rimraf')
 const Config = require('./config.json')
 
 const app = Express()
@@ -17,7 +19,7 @@ const recieve = Multer({
 app.post('/georeference', recieve.single('image'), (request, response) => {
     const points = JSON.parse(request.body.points)
     if (points.length < 3) response.status(400).send('not enough points')
-    georeference(request.file.path, points, (e, result) => {
+    georeference(request.file.path, points, request.params.tile, (e, result) => {
         if (e) response.status(500).send(e.message)
         else if (request.body.id && Config.uploadLocation) {
             upload(request.body.id, result, e => {
@@ -37,7 +39,7 @@ app.use((request, response) => {
 
 app.listen(3030)
 
-function georeference(filename, points, callback) {
+function georeference(filename, points, toTiles, callback) {
     const controls = points.map(point => `-gcp ${point.imgLng} ${point.imgLat} ${point.geoLng} ${point.geoLat}`).join(' ')
     const translateName = filename + '-tran'
     const translateCommand = `gdal_translate -of GTiff -a_srs EPSG:4326 ${controls} ${filename} ${translateName}`
@@ -47,11 +49,28 @@ function georeference(filename, points, callback) {
         const warpCommand = `gdalwarp ${translateName} ${warpName}` // -dstalpha
         ChildProcess.exec(warpCommand, e => {
             if (e) return callback(e)
-            const data = new Buffer(FS.readFileSync(warpName)).toString('base64')
-            callback(null, data)
+            if (toTiles) tile(warpName, callback)
+            else {
+                const data = new Buffer(FS.readFileSync(warpName)).toString('base64')
+                callback(null, data)
+            }
         })
     })
     tidy()
+}
+
+function tile(filename, callback) {
+    const tileName = filename + '-tile'
+    const tileCommand = `gdal2tiles.py -w none ${filename} ${tileName}`
+    ChildProcess.exec(tileCommand, e => {
+        if (e) return callback(e)
+        const compressName = tileName + '-comp'
+        ZipFolder(tileName, compressName, e => {
+            if (e) return callback(e)
+            const data = new Buffer(FS.readFileSync(compressName)).toString('base64')
+            callback(null, data)
+        })
+    })
 }
 
 function tidy() {
@@ -61,7 +80,9 @@ function tidy() {
             FS.stat('data/' + filename, (e, file) => {
                 if (e) console.error(e.stack)
                 const minutesAgoCreated = (new Date() - new Date(file.birthtime)) / 1000 / 60
-                if (minutesAgoCreated > 60) FS.unlink('data/' + filename)
+                if (minutesAgoCreated > 60) Rimraf('data/' + filename, {}, e => {
+                    if (e) console.error(e.stack)
+                })
             })
         })
     })
