@@ -1,7 +1,7 @@
 Georef
 ======
 
-A user-friendly webapp for converting normal images into GeoTiffs.
+A user-friendly webapp for converting normal images into georeferenced ones.
 
 ![Demo](https://cloud.githubusercontent.com/assets/896707/16615442/a7dac64a-436e-11e6-80bf-6d9bd5fc8c3c.gif)
 
@@ -27,7 +27,7 @@ Alternately, if you are deploying to AWS, you will need to create an EC2 machine
 
 (You will also need to expose port 3030 via the AWS Console.)
 
-Create a configuration file, by copying `config.example.json` to `config.json`. Both `uploadLocation` and `nextLocation` are optional, though the configuration file must be present for the build to succeed.
+Create a configuration file, by copying `config.example.json` to `config.json`. See below for what values can be configured.
 
 Next, build and run the Dockerfile:
 
@@ -41,6 +41,8 @@ Integration
 -----------
 
 Georef was built to be integrated as part of another application -- though it can be used on its own too. Integrate it with the rest of your application by using the following configuration options:
+
+`output`: one of `'geotiff'` or `'tiles'` to either produce a single GeoTiff image, or a Zip file containing map tiles in XYZ format.
 
 `uploadLocation`: a Url. If present and Georef is called with an `id` parameter the resulting image data gets uploaded here as a HTTP POST, with the `id` parameter concatenated onto the end. If both this configuration option is set and a an `id` is present the download button at the end is not shown.
 
