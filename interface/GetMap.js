@@ -2,8 +2,8 @@ var GetMap = React.createClass({
 
     download: function () {
         var types = {
-            tiff: 'image/tiff',
-            zip: 'application/zip'
+            'tiff': 'image/tiff',
+            'tar.gz': 'application/gzip'
         }
         var data = window.atob(this.props.result).split('').map(function (byte) {
             return byte.charCodeAt()

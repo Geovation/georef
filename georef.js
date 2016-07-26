@@ -5,7 +5,7 @@ const Express = require('express')
 const Multer = require('multer')
 const Request = require('request')
 const FormData = require('form-data')
-const ZipFolder = require('zip-folder')
+const Targz = require('tar.gz')
 const Rimraf = require('rimraf')
 const Config = require('./config.json')
 
@@ -19,7 +19,7 @@ const recieve = Multer({
 app.post('/georeference', recieve.single('image'), (request, response) => {
     const points = JSON.parse(request.body.points)
     if (points.length < 3) response.status(400).send('not enough points')
-    const format = Config.output === 'tiles' ? 'zip' : 'tiff'
+    const format = Config.output === 'tiles' ? 'tar.gz' : 'tiff'
     georeference(request.file.path, points, (e, result) => {
         if (e) response.status(500).send(e.message)
         else if (request.body.id && Config.uploadLocation) {
@@ -66,7 +66,7 @@ function tile(filename, callback) {
     ChildProcess.exec(tileCommand, e => {
         if (e) return callback(e)
         const compressName = tileName + '-comp'
-        ZipFolder(tileName, compressName, e => {
+        Targz().compress(tileName, compressName, e => {
             if (e) return callback(e)
             const data = new Buffer(FS.readFileSync(compressName)).toString('base64')
             callback(null, data)
