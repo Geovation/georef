@@ -1,5 +1,6 @@
 .*
 !.gitignore
+!.editorconfig
 
 config.json
 node_modules/

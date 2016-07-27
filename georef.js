@@ -98,3 +98,5 @@ function upload(id, data, callback) {
         else callback(null, response)
     })
 }
+
+module.exports = app
