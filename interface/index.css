@@ -193,7 +193,7 @@ button:disabled {
 
 .view-map .bottom {
     min-height: 52px;
-    overflow-x: scroll;
+    overflow-x: auto;
     white-space: nowrap;
     background: #333;
     margin: 0;

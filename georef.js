@@ -95,7 +95,9 @@ function upload(id, data, callback) {
     form.append('image', data)
     Request.post({ url, form }, (e, response) => {
         if (e) callback(e)
-        else callback(null, response)
+        const body = JSON.parse(response.body)
+        if (response.statusCode >= 400) callback(body)
+        else callback(null, body)
     })
 }
 
