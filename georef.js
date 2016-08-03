@@ -4,7 +4,6 @@ const ChildProcess = require('child_process')
 const Express = require('express')
 const Multer = require('multer')
 const Request = require('request')
-const FormData = require('form-data')
 const Targz = require('tar.gz')
 const Rimraf = require('rimraf')
 const Config = require('./config.json')
@@ -25,10 +24,10 @@ app.post('/georeference', recieve.single('image'), (request, response) => {
         else if (request.body.id && Config.uploadLocation) {
             upload(request.body.id, result, e => {
                 if (e) response.status(500).send(e.message)
-                else response.status(200).send({ result, resultUploaded: true, format, nextLocation: Config.nextLocation })
+                else response.status(200).send({ resultUploaded: true, format, nextLocation: Config.nextLocation })
             })
         }
-        else response.status(200).send({ result, resultUploaded: false, format, nextLocation: Config.nextLocation })
+        else response.status(200).send({ result: result.toString('base64'), resultUploaded: false, format, nextLocation: Config.nextLocation })
     })
 })
 
@@ -51,10 +50,10 @@ function georeference(filename, points, callback) {
         ChildProcess.exec(warpCommand, e => {
             if (e) return callback(e)
             if (Config.output === 'tiles') tile(warpName, callback)
-            else {
-                const data = new Buffer(FS.readFileSync(warpName)).toString('base64')
-                callback(null, data)
-            }
+            else FS.readFile(warpName, (e, data) => {
+                if (e) return callback(e)
+                callback(null, new Buffer(data))
+            })
         })
     })
     tidy()
@@ -68,8 +67,10 @@ function tile(filename, callback) {
         const compressName = tileName + '-comp'
         Targz().compress(tileName, compressName, e => {
             if (e) return callback(e)
-            const data = new Buffer(FS.readFileSync(compressName)).toString('base64')
-            callback(null, data)
+            FS.readFile(compressName, (e, data) => {
+                if (e) return callback(e)
+                callback(null, new Buffer(data))
+            })
         })
     })
 }
@@ -90,10 +91,14 @@ function tidy() {
 }
 
 function upload(id, data, callback) {
-    const url = Config.uploadLocation + id
-    const form = new FormData()
-    form.append('image', data)
-    Request.post({ url, form }, (e, response) => {
+    const request = {
+        url: Config.uploadLocation,
+        form: {
+            id,
+            tiles: data
+        }
+    }
+    Request.post(request, (e, response) => {
         if (e) callback(e)
         const body = JSON.parse(response.body)
         if (response.statusCode >= 400) callback(body)
