@@ -59,7 +59,7 @@ var ViewMap = React.createClass({
             if (http.status >= 400) this.setState({ error: http.responseText })
             else {
                 const response = JSON.parse(http.response)
-                this.props.setOutput(response.result, response.format, response.resultUploaded, response.nextLocation)
+                this.props.setOutput(response.result || true, response.format, response.resultUploaded, response.nextLocation)
             }
         }.bind(this))
         http.send(data)

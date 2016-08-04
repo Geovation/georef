@@ -93,16 +93,21 @@ function tidy() {
 function upload(id, data, callback) {
     const request = {
         url: Config.uploadLocation,
-        form: {
+        formData: {
             id,
-            tiles: data
+            tiles: {
+                value: data,
+                options: {
+                    filename: 'tiles',
+                    contentType: 'application/octet-stream'
+                }
+            }
         }
     }
     Request.post(request, (e, response) => {
         if (e) callback(e)
-        const body = JSON.parse(response.body)
-        if (response.statusCode >= 400) callback(body)
-        else callback(null, body)
+        if (response.statusCode >= 400) callback(JSON.parse(response.body))
+        else callback(null)
     })
 }
 
