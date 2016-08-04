@@ -106,7 +106,7 @@ function upload(id, data, callback) {
     }
     Request.post(request, (e, response) => {
         if (e) callback(e)
-        else if (response.body === '') callback({ message: 'System error' })
+        else if (response.statusCode >= 400 && response.body === '') callback({ message: response.statusCode })
         else if (response.statusCode >= 400) callback(JSON.parse(response.body))
         else callback(null)
     })
